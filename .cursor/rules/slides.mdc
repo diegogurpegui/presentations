@@ -1,0 +1,22 @@
+---
+description: How to create a self-contained HTML slide deck in this repo
+alwaysApply: true
+---
+
+# Slide decks
+
+When asked to create a presentation, copy a template into one HTML file. Do not link shared CSS, JS, or fonts.
+
+1. Read `templates/<name>/TEMPLATE.md`. Default template: `charla`.
+2. Copy `templates/<name>/template.html` to `presentations/<slug>.html`.
+3. Keep `<style>`, `<script>`, and the SVG sprite unchanged.
+4. Replace the `<section class="slide">` elements. Delete unused layouts.
+
+```html
+<section class="slide bullets">
+  <header class="bar"><h2>Título</h2></header>
+  <div class="body"><ul><li>Una idea.</li></ul></div>
+</section>
+```
+
+Photos may live in `presentations/<slug>/assets/` or be inlined as data URIs. The finished deck stays a single file.

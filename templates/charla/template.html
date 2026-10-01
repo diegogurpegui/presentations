@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Plantilla charla</title>
+  <style>
+    /* Ubuntu 0.83, copyright 2011 Canonical Ltd. Ubuntu Font Licence 1.0.
+       https://ubuntu.com/legal/font-licence
+       Spectral, copyright 2016 Production Type. SIL Open Font License 1.1.
+       https://openfontlicense.org
+       Latin subsets are embedded so this file renders offline. */
+
+    @font-face {
+      font-family: Ubuntu;
+      font-style: normal;
+      font-weight: 400;
+      font-display: swap;
+      src: url("data:font/woff2;base64,__FONT_UBUNTU_400__") format("woff2");
+    }
+    @font-face {
+      font-family: Ubuntu;
+      font-style: normal;
+      font-weight: 700;
+      font-display: swap;
+      src: url("data:font/woff2;base64,__FONT_UBUNTU_700__") format("woff2");
+    }
+    @font-face {
+      font-family: Spectral;
+      font-style: normal;
+      font-weight: 400;
+      font-display: swap;
+      src: url("data:font/woff2;base64,__FONT_SPECTRAL_400__") format("woff2");
+    }
+
+    :root {
+      --navy: #192b58;
+      --ink: #1c212c;
+      --peach: #f8e0c8;
+      --paper: #fff;
+      --blue-box: #d6e6fa;
+      --purple-box: #e4dcf0;
+      --amber-box: #f6d9a8;
+      --arrow: #e39b2b;
+      --link: #1a73e8;
+      --slide-w: 1920px;
+      --slide-h: 1080px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      height: 100%;
+      background: #101114;
+      overflow: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .sprite {
+      position: absolute;
+      width: 0;
+      height: 0;
+      overflow: hidden;
+    }
+
+    .deck {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: var(--slide-w);
+      height: var(--slide-h);
+      transform-origin: center center;
+      background: var(--paper);
+    }
+
+    .slide {
+      display: none;
+      position: absolute;
+      inset: 0;
+      width: var(--slide-w);
+      height: var(--slide-h);
+      overflow: hidden;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Ubuntu, "Segoe UI", sans-serif;
+      font-size: 32px;
+      font-weight: 400;
+      line-height: 1.35;
+    }
+
+    .slide.is-active { display: block; }
+
+    .slide.bullets.is-active,
+    .slide.links.is-active,
+    .slide.columns.is-active,
+    .slide.table.is-active,
+    .slide.canvas.is-active {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .slide.thanks.is-active {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .counter {
+      position: fixed;
+      z-index: 5;
+      right: 16px;
+      bottom: 14px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.5);
+      color: #fff;
+      font: 16px/1 Ubuntu, "Segoe UI", sans-serif;
+      pointer-events: none;
+    }
+
+    .icon {
+      width: 1.1em;
+      height: 1.1em;
+      display: inline-block;
+      vertical-align: -0.15em;
+      flex: 0 0 auto;
+    }
+
+    /* Shared content chrome */
+    .bar {
+      flex: 0 0 auto;
+      min-height: 148px;
+      background: var(--navy);
+      display: flex;
+      align-items: center;
+      padding: 28px 72px;
+    }
+
+    .bar h2 {
+      margin: 0;
+      color: #fff;
+      font-size: 48px;
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+    }
+
+    .body {
+      flex: 1;
+      min-height: 0;
+      padding: 56px 80px 64px;
+    }
+
+    /* title */
+    .slide.title h1 {
+      position: relative;
+      z-index: 1;
+      margin: 0;
+      padding: 96px 780px 0 88px;
+      font-size: 78px;
+      font-weight: 400;
+      letter-spacing: -0.03em;
+      line-height: 1.08;
+    }
+
+    .kicker {
+      position: relative;
+      z-index: 1;
+      margin: 32px 0 0 88px;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      font-size: 32px;
+    }
+
+    .badge {
+      background: #111;
+      color: #fff;
+      border-radius: 999px;
+      padding: 6px 18px 8px;
+      font-size: 26px;
+      line-height: 1.2;
+    }
+
+    .watermark {
+      position: absolute;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--peach);
+      z-index: 0;
+    }
+
+    .slide.title .watermark {
+      width: 900px;
+      height: 900px;
+      right: -70px;
+      top: -210px;
+    }
+
+    .mark {
+      width: 300px;
+      height: auto;
+      color: rgba(255, 255, 255, 0.94);
+    }
+
+    .band {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      background: var(--navy);
+      clip-path: polygon(0 70%, 100% 44%, 100% 100%, 0 100%);
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      padding: 0 84px 64px 80px;
+      color: #fff;
+    }
+
+    .logo {
+      display: block;
+      max-height: 72px;
+      max-width: 440px;
+    }
+
+    .logo-text {
+      margin: 0;
+      font-size: 36px;
+      letter-spacing: -0.02em;
+    }
+
+    .speaker { text-align: right; }
+
+    .who {
+      margin: 0 0 16px;
+      font-size: 30px;
+    }
+
+    .pills {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .speaker .pills { align-items: flex-end; }
+
+    .pills a {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: #111;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 999px;
+      padding: 9px 16px 9px 20px;
+      font-size: 22px;
+      line-height: 1.2;
+    }
+
+    .pills a:hover { background: #000; }
+
+    /* section + image */
+    .bg,
+    .slide.image > img,
+    .slide.section > img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .veil {
+      position: absolute;
+      inset: 0;
+      background: rgba(12, 22, 40, 0.45);
+    }
+
+    .slide.section h2 {
+      position: relative;
+      z-index: 1;
+      height: 100%;
+      margin: 0;
+      display: grid;
+      place-items: center;
+      padding: 0 140px;
+      text-align: center;
+      color: #fff;
+      font-family: Spectral, Georgia, serif;
+      font-size: 84px;
+      font-weight: 400;
+      line-height: 1.15;
+      text-shadow: 0 2px 28px rgba(0, 0, 0, 0.35);
+    }
+
+    .shade-stone {
+      background:
+        radial-gradient(ellipse at 28% 18%, rgba(255, 255, 255, 0.16), transparent 46%),
+        linear-gradient(160deg, #5c656e, #1c242c 68%);
+    }
+
+    .shade-dusk {
+      background: linear-gradient(115deg, #142033 0%, #3d5a80 46%, #c47b4a 100%);
+    }
+
+    /* bullets */
+    .slide.bullets ul {
+      margin: 8px 0 0;
+      padding-left: 1.15em;
+      font-size: 38px;
+      line-height: 1.4;
+    }
+
+    .slide.bullets li + li { margin-top: 18px; }
+
+    /* links */
+    .slide.links .link + .link { margin-top: 36px; }
+
+    .slide.links a {
+      color: var(--link);
+      font-size: 34px;
+    }
+
+    .slide.links .link p {
+      margin: 6px 0 0;
+      font-size: 28px;
+      color: var(--ink);
+    }
+
+    /* columns */
+    .cols-2,
+    .cols-3 {
+      display: grid;
+      height: 100%;
+      align-content: start;
+    }
+
+    .cols-2 { grid-template-columns: 1fr 1fr; }
+    .cols-3 { grid-template-columns: 1fr 1fr 1fr; gap: 48px; }
+
+    .cols-2 > * { padding-right: 40px; }
+
+    .cols-2 > :nth-child(n + 2) {
+      border-left: 2px dashed #c5cad3;
+      padding-left: 56px;
+      padding-right: 0;
+    }
+
+    .slide.columns h3 {
+      margin: 0 0 16px;
+      color: var(--navy);
+      font-size: 34px;
+      font-weight: 400;
+    }
+
+    .slide.columns p {
+      margin: 0;
+      font-size: 30px;
+      line-height: 1.4;
+    }
+
+    /* table */
+    .slide.table table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 32px;
+    }
+
+    .slide.table th,
+    .slide.table td {
+      border: 2px solid var(--ink);
+      padding: 14px 20px;
+      text-align: left;
+      font-weight: 400;
+    }
+
+    .slide.table th { font-weight: 700; }
+
+    /* canvas */
+    .slide.canvas .body {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 32px;
+    }
+
+    .row, .cols {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+    }
+
+    .stack {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 16px;
+    }
+
+    .box {
+      background: var(--blue-box);
+      color: var(--ink);
+      border-radius: 16px;
+      padding: 18px 28px;
+      font-size: 30px;
+      line-height: 1.3;
+    }
+
+    .box.purple { background: var(--purple-box); }
+    .box.amber { background: var(--amber-box); }
+    .pill { border-radius: 999px; }
+
+    .arrow {
+      position: relative;
+      flex: 0 0 100px;
+      width: 100px;
+      height: 0;
+      border-top: 6px solid var(--arrow);
+    }
+
+    .arrow::after {
+      content: "";
+      position: absolute;
+      right: -1px;
+      top: -11px;
+      border-width: 8px 0 8px 14px;
+      border-style: solid;
+      border-color: transparent transparent transparent var(--arrow);
+    }
+
+    .arrow.down { transform: rotate(90deg); }
+    .arrow.left { transform: rotate(180deg); }
+    .arrow.up { transform: rotate(-90deg); }
+
+    .arrow.purple { border-top-color: #7d6bb5; }
+    .arrow.purple::after { border-left-color: #7d6bb5; }
+
+    .slide.canvas .icon {
+      width: 48px;
+      height: 48px;
+    }
+
+    .mono {
+      font-family: ui-monospace, "Cascadia Mono", "Segoe UI Mono", monospace;
+      font-size: 0.92em;
+    }
+
+    /* thanks */
+    .thanks-left {
+      background: var(--navy);
+      color: #fff;
+      padding: 108px 80px 80px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .thanks-left h2 {
+      margin: 0;
+      font-size: 88px;
+      font-weight: 400;
+      letter-spacing: -0.03em;
+      line-height: 1.02;
+    }
+
+    .thanks-left .pills { align-items: flex-start; }
+
+    .thanks-right {
+      position: relative;
+      overflow: hidden;
+      padding: 108px 80px;
+      background: var(--paper);
+    }
+
+    .thanks-right h3 {
+      position: relative;
+      z-index: 1;
+      margin: 0;
+      max-width: 680px;
+      font-size: 64px;
+      font-weight: 400;
+      letter-spacing: -0.03em;
+      line-height: 1.12;
+    }
+
+    .thanks-right .watermark {
+      width: 680px;
+      height: 680px;
+      right: -100px;
+      bottom: -190px;
+    }
+
+    .thanks-right .mark { width: 230px; }
+
+    .thanks-right .pills {
+      position: relative;
+      z-index: 1;
+      align-items: flex-start;
+      margin-top: 36px;
+    }
+
+    @page {
+      size: 20in 11.25in;
+      margin: 0;
+    }
+
+    @media print {
+      html, body {
+        height: auto;
+        overflow: visible;
+        background: #fff;
+      }
+
+      .deck {
+        position: static !important;
+        transform: none !important;
+        width: var(--slide-w);
+        height: auto;
+      }
+
+      .counter, .sprite { display: none !important; }
+
+      .slide {
+        display: block !important;
+        position: relative !important;
+        break-after: page;
+        page-break-after: always;
+        break-inside: avoid;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      .slide.thanks { display: grid !important; }
+
+      .slide.bullets,
+      .slide.links,
+      .slide.columns,
+      .slide.table,
+      .slide.canvas {
+        display: flex !important;
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!--
+    Plantilla charla.
+    Copiar este archivo a presentations/<nombre>.html.
+    Conservar <style>, <script> y este sprite.
+    Reemplazar las <section class="slide">.
+    Contrato: templates/charla/TEMPLATE.md
+  -->
+  <svg class="sprite" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <symbol id="i-arrow" viewBox="0 0 24 24">
+      <path d="M4 12h14M14 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="i-key" viewBox="0 0 24 24">
+      <circle cx="8" cy="15" r="3.2" fill="none" stroke="currentColor" stroke-width="2"/>
+      <path d="M10.7 13.5 20 5.2M20 5.2v4.2M20 5.2h-4.2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="i-db" viewBox="0 0 24 24">
+      <ellipse cx="12" cy="7" rx="7" ry="3" fill="none" stroke="currentColor" stroke-width="2"/>
+      <path d="M5 7v10c0 1.7 3.1 3 7 3s7-1.3 7-3V7M5 12c0 1.7 3.1 3 7 3s7-1.3 7-3" fill="none" stroke="currentColor" stroke-width="2"/>
+    </symbol>
+    <symbol id="i-person" viewBox="0 0 24 24">
+      <circle cx="12" cy="8" r="3" fill="none" stroke="currentColor" stroke-width="2"/>
+      <path d="M5.5 19.2c1.3-3 3.4-4.5 6.5-4.5s5.2 1.5 6.5 4.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="i-gear" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="2"/>
+      <path d="M12 3.2v2.2M12 18.6V21M3.2 12h2.2M18.6 12H21M5.8 5.8l1.5 1.5M16.7 16.7l1.5 1.5M18.2 5.8l-1.5 1.5M7.3 16.7 5.8 18.2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="i-globe" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="2"/>
+      <path d="M4 12h16M12 4c2.2 2.4 3.2 5 3.2 8s-1 5.6-3.2 8c-2.2-2.4-3.2-5-3.2-8s1-5.6 3.2-8z" fill="none" stroke="currentColor" stroke-width="2"/>
+    </symbol>
+    <symbol id="i-btc" viewBox="0 0 120 150">
+      <path fill="currentColor" d="M48 14h12v16h8c18 0 30 10 30 26 0 11-6 19-16 23 13 4 21 14 21 28 0 18-15 30-34 30H60v16H48v-16H34v-14h14V46H34V32h14V14zm12 30v28h16c9 0 15-5 15-14s-6-14-15-14H60zm0 42v32h18c10 0 17-6 17-16s-7-16-17-16H60z"/>
+      <rect fill="currentColor" x="20" y="50" width="82" height="8" rx="1"/>
+      <rect fill="currentColor" x="20" y="96" width="82" height="8" rx="1"/>
+    </symbol>
+  </svg>
+
+  <p class="counter" aria-live="polite"></p>
+
+  <main class="deck">
+    <section class="slide title">
+      <h1>Título de la charla</h1>
+      <p class="kicker"><span class="badge">Evento</span> 2026</p>
+      <div class="watermark" aria-hidden="true">
+        <svg class="mark"><use href="#i-btc"/></svg>
+      </div>
+      <div class="band">
+        <p class="logo-text">Logo</p>
+        <div class="speaker">
+          <p class="who">Nombre Apellido</p>
+          <ul class="pills">
+            <li><a href="https://ejemplo.com">ejemplo.com <svg class="icon"><use href="#i-globe"/></svg></a></li>
+            <li><a href="https://ejemplo.com/@nombre">@nombre <svg class="icon"><use href="#i-person"/></svg></a></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide section overlay">
+      <div class="bg shade-stone"></div>
+      <div class="veil"></div>
+      <h2>Una sección</h2>
+    </section>
+
+    <section class="slide image">
+      <div class="bg shade-dusk"></div>
+    </section>
+
+    <section class="slide bullets">
+      <header class="bar"><h2>Una lista</h2></header>
+      <div class="body">
+        <ul>
+          <li>Primera idea, en una línea corta.</li>
+          <li>Segunda idea, con el mismo tamaño.</li>
+          <li>Tercera idea para cerrar el bloque.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="slide links">
+      <header class="bar"><h2>Enlaces</h2></header>
+      <div class="body">
+        <article class="link">
+          <a href="https://ejemplo.com">https://ejemplo.com</a>
+          <p>Qué hay del otro lado del enlace.</p>
+        </article>
+        <article class="link">
+          <a href="https://ejemplo.com/guia">https://ejemplo.com/guia</a>
+          <p>Una segunda referencia, con una línea de contexto.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="slide columns">
+      <header class="bar"><h2>Dos columnas</h2></header>
+      <div class="body cols-2">
+        <div>
+          <h3>Izquierda</h3>
+          <p>Un bloque de texto. Para tres columnas, cambiar <span class="mono">cols-2</span> por <span class="mono">cols-3</span>.</p>
+        </div>
+        <div>
+          <h3>Derecha</h3>
+          <p>El otro lado, separado por una línea punteada.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide table">
+      <header class="bar"><h2>Una tabla</h2></header>
+      <div class="body">
+        <table>
+          <thead>
+            <tr><th>Fecha</th><th>Origen</th><th>Destino</th><th>Importe</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>…</td><td>Ana</td><td>Luis</td><td>100</td></tr>
+            <tr><td>…</td><td>Luis</td><td>Marta</td><td>40</td></tr>
+            <tr><td>…</td><td>Marta</td><td>Ana</td><td>15</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="slide canvas">
+      <header class="bar"><h2>Cajas y flechas</h2></header>
+      <div class="body">
+        <div class="row">
+          <div class="box">Mensaje corto</div>
+          <span class="arrow" aria-hidden="true"></span>
+          <div class="box purple">Hash A</div>
+        </div>
+        <div class="row">
+          <div class="box">Mensaje<br>más largo</div>
+          <span class="arrow" aria-hidden="true"></span>
+          <div class="box purple">Hash B</div>
+        </div>
+        <div class="row">
+          <svg class="icon" aria-hidden="true"><use href="#i-key"/></svg>
+          <div class="box amber pill">Nonce</div>
+          <span class="arrow" aria-hidden="true"></span>
+          <div class="box"><svg class="icon" aria-hidden="true"><use href="#i-db"/></svg> Bloque</div>
+          <svg class="icon" aria-hidden="true"><use href="#i-person"/></svg>
+          <svg class="icon" aria-hidden="true"><use href="#i-gear"/></svg>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide thanks">
+      <div class="thanks-left">
+        <h2>¡Muchas<br>gracias!</h2>
+        <ul class="pills">
+          <li><a href="https://ejemplo.com">ejemplo.com <svg class="icon"><use href="#i-globe"/></svg></a></li>
+          <li><a href="https://ejemplo.com/@nombre">@nombre <svg class="icon"><use href="#i-person"/></svg></a></li>
+        </ul>
+      </div>
+      <div class="thanks-right">
+        <h3>Título de la charla</h3>
+        <div class="watermark" aria-hidden="true">
+          <svg class="mark"><use href="#i-btc"/></svg>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    (function () {
+      var deck = document.querySelector(".deck");
+      if (!deck) return;
+      var slides = Array.prototype.filter.call(deck.children, function (el) {
+        return el.classList && el.classList.contains("slide");
+      });
+      var counter = document.querySelector(".counter");
+      var index = 0;
+
+      function fit() {
+        if (window.matchMedia("print").matches) return;
+        var scale = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+        deck.style.transform = "translate(-50%, -50%) scale(" + scale + ")";
+      }
+
+      function show(n) {
+        if (!slides.length) return;
+        index = Math.max(0, Math.min(slides.length - 1, n));
+        slides.forEach(function (el, i) {
+          var on = i === index;
+          el.classList.toggle("is-active", on);
+          el.setAttribute("aria-hidden", on ? "false" : "true");
+        });
+        if (counter) counter.textContent = (index + 1) + " / " + slides.length;
+        var hash = "#" + (index + 1);
+        if (location.hash !== hash) history.replaceState(null, "", hash);
+      }
+
+      function fromHash() {
+        var n = parseInt(String(location.hash).slice(1), 10);
+        return n > 0 ? n - 1 : 0;
+      }
+
+      window.addEventListener("resize", fit);
+      window.addEventListener("hashchange", function () { show(fromHash()); });
+      window.addEventListener("beforeprint", function () { deck.style.transform = "none"; });
+      window.addEventListener("afterprint", fit);
+
+      window.addEventListener("keydown", function (e) {
+        if (e.altKey || e.metaKey || e.ctrlKey) return;
+        if (e.target.closest && e.target.closest("a, input, textarea, button")) return;
+        var next = { ArrowRight: 1, ArrowDown: 1, PageDown: 1, " ": 1 };
+        var prev = { ArrowLeft: 1, ArrowUp: 1, PageUp: 1, Backspace: 1 };
+        if (next[e.key]) { e.preventDefault(); show(index + 1); }
+        else if (prev[e.key]) { e.preventDefault(); show(index - 1); }
+        else if (e.key === "Home") { e.preventDefault(); show(0); }
+        else if (e.key === "End") { e.preventDefault(); show(slides.length - 1); }
+      });
+
+      deck.addEventListener("click", function (e) {
+        if (e.target.closest("a")) return;
+        var rect = deck.getBoundingClientRect();
+        if (e.clientX - rect.left < rect.width * 0.22) show(index - 1);
+        else show(index + 1);
+      });
+
+      fit();
+      show(fromHash());
+    })();
+  </script>
+</body>
+</html>
