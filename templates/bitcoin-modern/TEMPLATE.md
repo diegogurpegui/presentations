@@ -1,19 +1,36 @@
 # Bitcoin modern
 
-One self-contained HTML file. Bitcoin orange `#F7931A`, black `#0A0A0A`, white `#FFFFFF`. Deeper orange `#9A5600` is for links on white. The typeface is the system UI font, so nothing is linked or embedded.
+Bitcoin orange `#F7931A`, black `#0A0A0A`, white `#FFFFFF`. Deeper orange `#9A5600` is for links on white. The typeface is the system UI font, so nothing is linked or embedded. CSS and JavaScript stay in the HTML file.
 
 Add `dark` or `light` to each slide. Inner slides keep a short title and give the rest of the slide to the content.
 
 ## Create a deck
 
-1. Copy [`template.html`](template.html) to `presentations/<slug>.html`.
+1. Copy [`template.html`](template.html) to `presentations/<slug>/index.html`.
 2. Keep `<style>`, `<script>`, and the SVG sprite unchanged.
 3. Replace the `<section class="slide">` elements inside `<main class="deck">`. Delete layouts you do not use.
 4. Set `<title>` to the talk name.
 
-Do not link stylesheets, scripts, or font files. The finished talk must stay one HTML file.
+Do not link stylesheets, scripts, or font files.
 
-Photos may live in `presentations/<slug>/assets/`, or be inlined as data URIs when the file has to travel alone. On an image slide, `.shade` and the Bitcoin mark are placeholders until there is a photo.
+## Images
+
+Put photos in `presentations/<slug>/assets/` and point at them from the HTML:
+
+```html
+<img alt="" src="assets/foto.jpg">
+```
+
+```
+presentations/<slug>/
+  index.html
+  assets/
+    foto.jpg
+```
+
+`index.html` and `assets/` travel together. To send one file, inline the image as a data URI and omit `assets/`.
+
+On an image slide, `.shade` and the Bitcoin mark stand in until there is a photo. Full-bleed images crop with `object-fit: cover`. Add `contain` when the picture must stay whole. An `<img>` inside `.body` scales to the content area.
 
 ## Presenting
 
@@ -161,6 +178,8 @@ Full-bleed photo. Drop `.shade` and the mark when the photo is in place.
   <img alt="" src="assets/foto.jpg">
 </section>
 ```
+
+Add `contain` on the image for a diagram or screenshot that must not be cropped.
 
 ### end
 

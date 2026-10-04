@@ -1,17 +1,35 @@
 # Charla
 
-One self-contained HTML file. Navy `#192B58`, charcoal `#1C212C`, peach circle `#F8E0C8`. Ubuntu for text, Spectral for titles on photos. Fonts are already embedded in `template.html`.
+Navy `#192B58`, charcoal `#1C212C`, peach circle `#F8E0C8`. Ubuntu for text, Spectral for titles on photos. Fonts are already embedded in `template.html`. CSS and JavaScript stay in that file.
 
 ## Create a deck
 
-1. Copy [`template.html`](template.html) to `presentations/<slug>.html`.
+1. Copy [`template.html`](template.html) to `presentations/<slug>/index.html`.
 2. Keep `<style>`, `<script>`, and the SVG sprite unchanged.
 3. Replace the `<section class="slide">` elements inside `<main class="deck">`. Delete layouts you do not use.
 4. Set `<title>` to the talk name.
 
-Do not link stylesheets, scripts, or font files. The finished talk must stay one HTML file.
+Do not link stylesheets, scripts, or font files.
 
-Photos and logos may live in `presentations/<slug>/assets/`, or be inlined as data URIs when the file has to travel alone. The `shade-stone` and `shade-dusk` classes are placeholders for when there is no photo yet.
+## Images
+
+Put photos and logos in `presentations/<slug>/assets/` and point at them from the HTML:
+
+```html
+<img alt="" src="assets/foto.jpg">
+```
+
+```
+presentations/<slug>/
+  index.html
+  assets/
+    foto.jpg
+    logo.svg
+```
+
+`index.html` and `assets/` travel together. To send one file, inline the image as a data URI and omit `assets/`.
+
+`shade-stone` and `shade-dusk` stand in when there is no photo yet. Full-bleed images crop with `object-fit: cover`. Add `contain` when the picture must stay whole. An `<img>` inside `.body` scales to the content area.
 
 ## Presenting
 
@@ -63,6 +81,8 @@ Full-bleed photo, centered Spectral title. Add `overlay` and `<div class="veil">
   <img alt="" src="assets/foto.jpg">
 </section>
 ```
+
+Add `contain` on the image for a diagram or screenshot that must not be cropped.
 
 ### bullets
 

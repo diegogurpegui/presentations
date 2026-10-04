@@ -6,7 +6,7 @@
   <title>Plantilla bitcoin-modern</title>
   <style>
     /* System UI stack on purpose: no linked or embedded font files.
-       The deck stays one HTML file and renders offline. */
+       CSS and JavaScript stay in this file. Images live in assets/ beside it. */
 
     :root {
       --btc: #f7931a;
@@ -496,6 +496,15 @@
       object-fit: cover;
     }
 
+    .slide.image > img.contain { object-fit: contain; }
+
+    .body img {
+      display: block;
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+
     .shade {
       background:
         radial-gradient(circle at 78% 70%, rgba(247, 147, 26, 0.28), transparent 42%),
@@ -637,7 +646,8 @@
 <body>
   <!--
     Plantilla bitcoin-modern.
-    Copiar este archivo a presentations/<nombre>.html.
+    Copiar este archivo a presentations/<nombre>/index.html.
+    Las imágenes van en presentations/<nombre>/assets/ y se referencian como assets/<archivo>.
     Conservar <style>, <script> y este sprite.
     Reemplazar las <section class="slide">.
     Contrato: templates/bitcoin-modern/TEMPLATE.md
