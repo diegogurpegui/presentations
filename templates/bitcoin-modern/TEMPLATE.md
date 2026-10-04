@@ -194,38 +194,38 @@ Last slide. Contact row: website, X, Instagram, Nostr, LinkedIn. A long `npub` w
   </div>
   <ul class="contacts">
     <li>
-      <a href="https://ejemplo.com">
+      <a href="https://diegogurpegui.com">
         <svg class="icon" aria-hidden="true"><use href="#i-globe"/></svg>
         <span class="label">Web</span>
-        <span class="value">ejemplo.com</span>
+        <span class="value">diegogurpegui.com</span>
       </a>
     </li>
     <li>
-      <a href="https://x.com/nombre">
+      <a href="https://twitter.com/diegogurpegui">
         <svg class="icon" aria-hidden="true"><use href="#i-x"/></svg>
         <span class="label">X</span>
-        <span class="value">@nombre</span>
+        <span class="value">@diegogurpegui</span>
       </a>
     </li>
     <li>
-      <a href="https://instagram.com/nombre">
+      <a href="https://instagram.com/diego.gurpegui">
         <svg class="icon" aria-hidden="true"><use href="#i-instagram"/></svg>
         <span class="label">Instagram</span>
-        <span class="value">@nombre</span>
+        <span class="value">@diego.gurpegui</span>
       </a>
     </li>
     <li>
-      <a href="https://njump.me/npub1ejemplo">
+      <a href="nostr:npub168nqgewzkamnyh53x0epqrftkv2pdh9gzr6558v4vetzr3w7uxfs63926e">
         <svg class="icon" aria-hidden="true"><use href="#i-nostr"/></svg>
         <span class="label">Nostr</span>
-        <span class="value mono">npub1ejemplo</span>
+        <span class="value">@diegogurpegui.com</span>
       </a>
     </li>
     <li>
-      <a href="https://www.linkedin.com/in/nombre">
+      <a href="https://www.linkedin.com/in/diegogurpegui">
         <svg class="icon" aria-hidden="true"><use href="#i-linkedin"/></svg>
         <span class="label">LinkedIn</span>
-        <span class="value">/in/nombre</span>
+        <span class="value">/in/diegogurpegui</span>
       </a>
     </li>
   </ul>
