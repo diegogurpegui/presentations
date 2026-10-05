@@ -106,6 +106,13 @@
       align-items: center;
     }
 
+    .slide.title.contacts.is-active {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+      align-items: stretch;
+      column-gap: 64px;
+    }
+
     .icon {
       width: 1.1em;
       height: 1.1em;
@@ -163,18 +170,6 @@
     .slide.title .lede {
       position: relative;
       z-index: 1;
-    }
-
-    .slide.title::before,
-    .slide.end::before {
-      content: "";
-      position: absolute;
-      z-index: 2;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 4px;
-      background: var(--btc);
     }
 
     .kicker {
@@ -254,6 +249,78 @@
     }
 
     .meta { color: var(--muted); }
+
+    /* title + contacts: alternate intro. Smaller than .end */
+    .slide.title.contacts .intro {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      min-height: 0;
+    }
+
+    .slide.title.contacts .kicker { font-size: 32px; }
+
+    .slide.title.contacts h1 {
+      max-width: none;
+      font-size: 132px;
+    }
+
+    .slide.title.contacts .lede {
+      max-width: none;
+      font-size: 40px;
+    }
+
+    .slide.title.contacts .foot {
+      position: static;
+      left: auto;
+      right: auto;
+      bottom: auto;
+      margin-top: auto;
+      padding-top: 20px;
+    }
+
+    .slide.title.contacts .who,
+    .slide.title.contacts .meta { font-size: 36px; }
+
+    .slide.title.contacts .watermark {
+      width: 640px;
+      right: -220px;
+      left: auto;
+      bottom: -380px;
+      opacity: 0.16;
+    }
+
+    .slide.title.contacts .mark { width: 640px; }
+
+    .slide.title.contacts .contacts {
+      position: relative;
+      z-index: 1;
+      align-self: center;
+    }
+
+    .slide.title.contacts .contacts a {
+      grid-template-columns: 40px 168px minmax(0, 1fr);
+      gap: 12px;
+      padding: 12px 0;
+    }
+
+    .slide.title.contacts .contacts .icon {
+      width: 40px;
+      height: 40px;
+    }
+
+    .slide.title.contacts .contacts .label {
+      font-size: 18px;
+      letter-spacing: 0.12em;
+    }
+
+    .slide.title.contacts .contacts .value { font-size: 32px; }
+
+    .slide.title.contacts .contacts .value.mono {
+      font-size: 22px;
+    }
 
     /* section */
     .slide.section {
@@ -630,7 +697,8 @@
       .slide.section,
       .slide.quote { display: flex !important; }
 
-      .slide.end { display: grid !important; }
+      .slide.end,
+      .slide.title.contacts { display: grid !important; }
 
       .slide.bullets,
       .slide.columns,
@@ -697,6 +765,62 @@
         <p class="who">Nombre Apellido</p>
         <p class="meta">Organización</p>
       </footer>
+    </section>
+
+    <!--
+      Alternate intro. Delete this slide when the plain title is enough.
+      Same contact rows as the end slide, set smaller.
+    -->
+    <section class="slide title contacts dark">
+      <div class="intro">
+        <p class="kicker">Evento · 2026</p>
+        <h1>Título de<br>la charla</h1>
+        <p class="lede">Una línea que sitúa el tema.</p>
+        <footer class="foot">
+          <p class="who">Nombre Apellido</p>
+          <p class="meta">Organización</p>
+        </footer>
+      </div>
+      <ul class="contacts">
+        <li>
+          <a href="https://diegogurpegui.com">
+            <svg class="icon" aria-hidden="true"><use href="#i-globe"/></svg>
+            <span class="label">Web</span>
+            <span class="value">diegogurpegui.com</span>
+          </a>
+        </li>
+        <li>
+          <a href="https://twitter.com/diegogurpegui">
+            <svg class="icon" aria-hidden="true"><use href="#i-x"/></svg>
+            <span class="label">X</span>
+            <span class="value">@diegogurpegui</span>
+          </a>
+        </li>
+        <li>
+          <a href="https://instagram.com/diego.gurpegui">
+            <svg class="icon" aria-hidden="true"><use href="#i-instagram"/></svg>
+            <span class="label">Instagram</span>
+            <span class="value">@diego.gurpegui</span>
+          </a>
+        </li>
+        <li>
+          <a href="nostr:npub168nqgewzkamnyh53x0epqrftkv2pdh9gzr6558v4vetzr3w7uxfs63926e">
+            <svg class="icon" aria-hidden="true"><use href="#i-nostr"/></svg>
+            <span class="label">Nostr</span>
+            <span class="value">@diegogurpegui.com</span>
+          </a>
+        </li>
+        <li>
+          <a href="https://www.linkedin.com/in/diegogurpegui">
+            <svg class="icon" aria-hidden="true"><use href="#i-linkedin"/></svg>
+            <span class="label">LinkedIn</span>
+            <span class="value">/in/diegogurpegui</span>
+          </a>
+        </li>
+      </ul>
+      <div class="watermark" aria-hidden="true">
+        <svg class="mark" viewBox="0 0 64 64"><use href="#i-btc"/></svg>
+      </div>
     </section>
 
     <section class="slide section dark">

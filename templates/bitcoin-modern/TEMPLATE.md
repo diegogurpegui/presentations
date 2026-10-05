@@ -61,6 +61,38 @@ First slide. Dark by default. `light` flips it.
 
 Omit `.lede`, `.watermark`, or `.meta` when unused.
 
+### title contacts
+
+Alternate intro. Keep the plain `title` slide unless this one is wanted. Same contact rows as `end`, at a smaller size. `title contacts light` is the white version.
+
+```html
+<section class="slide title contacts dark">
+  <div class="intro">
+    <p class="kicker">Evento · 2026</p>
+    <h1>Título de<br>la charla</h1>
+    <p class="lede">Una línea que sitúa el tema.</p>
+    <footer class="foot">
+      <p class="who">Nombre Apellido</p>
+      <p class="meta">Organización</p>
+    </footer>
+  </div>
+  <ul class="contacts">
+    <li>
+      <a href="https://diegogurpegui.com">
+        <svg class="icon" aria-hidden="true"><use href="#i-globe"/></svg>
+        <span class="label">Web</span>
+        <span class="value">diegogurpegui.com</span>
+      </a>
+    </li>
+  </ul>
+  <div class="watermark" aria-hidden="true">
+    <svg class="mark" viewBox="0 0 64 64"><use href="#i-btc"/></svg>
+  </div>
+</section>
+```
+
+Drop contact rows you do not need. A long `npub` wraps; add `mono` on that value. Omit `.lede`, `.watermark`, or `.meta` when unused.
+
 ### section
 
 ```html
