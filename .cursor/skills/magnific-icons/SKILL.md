@@ -12,14 +12,14 @@ Run from the repo root:
 ```bash
 python3 .cursor/skills/magnific-icons/scripts/icons.py search "wallet" --shape outline --per-page 8
 python3 .cursor/skills/magnific-icons/scripts/icons.py get 52912
-python3 .cursor/skills/magnific-icons/scripts/icons.py download 52912 --out presentations/<slug>/assets/wallet.svg
+python3 .cursor/skills/magnific-icons/scripts/icons.py download 52912 --out public/index/<slug>/assets/wallet.svg
 ```
 
 If the script exits 2, the key is missing. Finish the deck without Magnific icons and say so. Do not invent icon files.
 
 ## Choosing an icon
 
-- Save files in `presentations/<slug>/assets/` and reference them as `assets/<file>`.
+- Save files in `public/index/<slug>/assets/` and reference them as `assets/<file>`.
 - Default format is SVG. Use `--format png` only when the slide needs a bitmap.
 - Search defaults to free SVGs (`--free-svg free`) so download does not hit a premium lock.
 - Keep one shape for a deck (`outline` or `fill`). Pass `--lang es-ES` or `en-US` to match the talk.

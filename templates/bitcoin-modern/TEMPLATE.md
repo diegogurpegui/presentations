@@ -6,7 +6,7 @@ Add `dark` or `light` to each slide. Inner slides keep a short title and give th
 
 ## Create a deck
 
-1. Copy [`template.html`](template.html) to `presentations/<slug>/index.html`.
+1. Copy [`template.html`](template.html) to `public/index/<slug>/index.html`.
 2. Keep `<style>`, `<script>`, and the SVG sprite unchanged.
 3. Replace the `<section class="slide">` elements inside `<main class="deck">`. Delete layouts you do not use.
 4. Set `<title>` to the talk name.
@@ -15,14 +15,14 @@ Do not link stylesheets, scripts, or font files.
 
 ## Images
 
-Put photos in `presentations/<slug>/assets/` and point at them from the HTML:
+Put photos in `public/index/<slug>/assets/` and point at them from the HTML:
 
 ```html
 <img alt="" src="assets/foto.jpg">
 ```
 
 ```
-presentations/<slug>/
+public/index/<slug>/
   index.html
   assets/
     foto.jpg

@@ -1,4 +1,3 @@
-presentations/
 .env
 .env.*
 !.env.example
