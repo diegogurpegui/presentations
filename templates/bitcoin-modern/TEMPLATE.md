@@ -34,7 +34,7 @@ On an image slide, `.shade` and the Bitcoin mark stand in until there is a photo
 
 ## Presenting
 
-Arrow keys, space, Home, and End move between slides. Click the left edge to go back and anywhere else to go forward. The URL hash is `#1`, `#2`, … Print puts one 16:9 slide on each page.
+Arrow keys, space, Home, and End move between slides. Click the left edge to go back and anywhere else to go forward. The mouse is a red dot with a short trail. The URL hash is `#1`, `#2`, … Print puts one 16:9 slide on each page.
 
 ## Layouts
 

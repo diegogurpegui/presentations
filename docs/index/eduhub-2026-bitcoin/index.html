@@ -584,6 +584,18 @@
 
     .contacts a:hover .value { color: var(--link); }
 
+    html.has-laser,
+    html.has-laser * { cursor: none !important; }
+
+    .laser {
+      position: fixed;
+      inset: 0;
+      z-index: 30;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
     @page {
       size: 20in 11.25in;
       margin: 0;
@@ -603,7 +615,8 @@
         height: auto;
       }
 
-      .sprite { display: none !important; }
+      .sprite,
+      .laser { display: none !important; }
 
       .slide {
         display: block !important;
@@ -685,8 +698,14 @@
       </footer>
     </section>
 
-    <section class="slide section dark">
-      <h2>¿Alguno acá cree que va a poder comprarse una casa como la de sus abuelos?</h2>
+    <section class="slide section dark" style="gap:72px;">
+      <h2 style="font-size:96px; line-height:1.05;">¿Alguno acá cree que ...</h2>
+      <div style="display:flex; flex-direction:column; align-items:flex-start; gap:40px; text-align:left;">
+        <p style="margin:0; font-size:58px; font-weight:600; letter-spacing:-0.03em; line-height:1.15;">... va a poder comprarse una casa como la de sus abuelos?</p>
+        <p style="margin:0; font-size:58px; font-weight:600; letter-spacing:-0.03em; line-height:1.15;">... podrá vivir con la jubilación?</p>
+        <p style="margin:0; font-size:58px; font-weight:600; letter-spacing:-0.03em; line-height:1.15;">... debe saber algo de inversión para poder ahorrar?</p>
+        <p style="margin:0; font-size:58px; font-weight:600; letter-spacing:-0.03em; line-height:1.15;">... la moneda que usamos está bien administrada?</p>
+      </div>
     </section>
 
     <section class="slide canvas light">
@@ -1165,12 +1184,129 @@
         else if (e.key === "End") { e.preventDefault(); show(slides.length - 1); }
       });
 
-      deck.addEventListener("click", function (e) {
-        if (e.target.closest("a")) return;
+      window.addEventListener("click", function (e) {
+        if (e.target.closest && e.target.closest("a")) return;
         var rect = deck.getBoundingClientRect();
+        if (e.clientX < rect.left || e.clientX > rect.right || e.clientY < rect.top || e.clientY > rect.bottom) return;
         if (e.clientX - rect.left < rect.width * 0.22) show(index - 1);
         else show(index + 1);
       });
+
+      (function laser() {
+        var canvas = document.createElement("canvas");
+        canvas.className = "laser";
+        canvas.setAttribute("aria-hidden", "true");
+        canvas.style.pointerEvents = "none";
+        document.body.appendChild(canvas);
+        var ctx = canvas.getContext("2d");
+        var head = null;
+        var trail = [];
+        var raf = 0;
+        var life = 144;
+        var reach = 115.2;
+        var root = document.documentElement;
+
+        function resize() {
+          var dpr = Math.min(window.devicePixelRatio || 1, 2);
+          canvas.width = Math.round(window.innerWidth * dpr);
+          canvas.height = Math.round(window.innerHeight * dpr);
+          ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        }
+
+        function kick() {
+          if (!raf) raf = requestAnimationFrame(paint);
+        }
+
+        function paint() {
+          raf = 0;
+          var now = performance.now();
+          var kept = [];
+          var i;
+          ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+          for (i = 0; i < trail.length; i++) {
+            var q = trail[i];
+            if (now - q.t >= life) continue;
+            if (head) {
+              var qx = q.x - head.x;
+              var qy = q.y - head.y;
+              if (qx * qx + qy * qy > reach * reach) continue;
+            }
+            kept.push(q);
+          }
+          trail = kept;
+          ctx.lineCap = "round";
+          var prev = null;
+          for (i = 0; i < trail.length; i++) {
+            var p = trail[i];
+            if (prev) stroke(prev, p, now);
+            prev = p;
+          }
+          if (head && prev) stroke(prev, head, now);
+          if (head) dot(head.x, head.y);
+          if (head || trail.length) kick();
+        }
+
+        function stroke(a, b, now) {
+          if (!head) return;
+          var jx = b.x - a.x;
+          var jy = b.y - a.y;
+          if (jx * jx + jy * jy > 360000) return;
+          var mx = (a.x + b.x) / 2 - head.x;
+          var my = (a.y + b.y) / 2 - head.y;
+          var dist = Math.sqrt(mx * mx + my * my);
+          if (dist >= reach) return;
+          var age = 1 - (now - a.t) / life;
+          var amount = Math.min(age, 1 - dist / reach) * 0.3;
+          if (amount <= 0) return;
+          ctx.beginPath();
+          ctx.strokeStyle = "rgba(255, 32, 32, " + amount.toFixed(3) + ")";
+          ctx.lineWidth = 3;
+          ctx.moveTo(a.x, a.y);
+          ctx.lineTo(b.x, b.y);
+          ctx.stroke();
+        }
+
+        function dot(x, y) {
+          var glow = ctx.createRadialGradient(x, y, 0, x, y, 16);
+          glow.addColorStop(0, "rgba(255, 30, 30, 0.4)");
+          glow.addColorStop(1, "rgba(255, 0, 0, 0)");
+          ctx.fillStyle = glow;
+          ctx.beginPath();
+          ctx.arc(x, y, 16, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.fillStyle = "#ff1c1c";
+          ctx.beginPath();
+          ctx.arc(x, y, 6.4, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.fillStyle = "#ffc2c2";
+          ctx.beginPath();
+          ctx.arc(x, y, 2.08, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        resize();
+        window.addEventListener("resize", resize);
+        window.addEventListener("pointermove", function (e) {
+          if (e.pointerType && e.pointerType !== "mouse") return;
+          var now = performance.now();
+          if (head) {
+            var dx = e.clientX - head.x;
+            var dy = e.clientY - head.y;
+            if (dx * dx + dy * dy > 1) trail.push({ x: head.x, y: head.y, t: now });
+          }
+          if (trail.length > 140) trail.shift();
+          head = { x: e.clientX, y: e.clientY };
+          root.classList.add("has-laser");
+          kick();
+        });
+        root.addEventListener("pointerleave", function (e) {
+          if (e.pointerType && e.pointerType !== "mouse") return;
+          head = null;
+          trail = [];
+          root.classList.remove("has-laser");
+          kick();
+        });
+      })();
 
       fit();
       show(fromHash());
