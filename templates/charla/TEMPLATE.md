@@ -4,7 +4,7 @@ Navy `#192B58`, charcoal `#1C212C`, peach circle `#F8E0C8`. Ubuntu for text, Spe
 
 ## Create a deck
 
-1. Copy [`template.html`](template.html) to `public/index/<slug>/index.html`.
+1. Copy [`template.html`](template.html) to `docs/index/<slug>/index.html`.
 2. Keep `<style>`, `<script>`, and the SVG sprite unchanged.
 3. Replace the `<section class="slide">` elements inside `<main class="deck">`. Delete layouts you do not use.
 4. Set `<title>` to the talk name.
@@ -13,14 +13,14 @@ Do not link stylesheets, scripts, or font files.
 
 ## Images
 
-Put photos and logos in `public/index/<slug>/assets/` and point at them from the HTML:
+Put photos and logos in `docs/index/<slug>/assets/` and point at them from the HTML:
 
 ```html
 <img alt="" src="assets/foto.jpg">
 ```
 
 ```
-public/index/<slug>/
+docs/index/<slug>/
   index.html
   assets/
     foto.jpg
