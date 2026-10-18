@@ -38,7 +38,7 @@ Arrow keys, space, Home, and End move between slides. Click the left edge to go 
 
 ## Layouts
 
-Every slide is `<section class="slide LAYOUT THEME">`. Theme is `dark` or `light`.
+Every slide is `<section class="slide LAYOUT THEME">`. Theme is `dark` or `light`. A list of items uses `bullets`.
 
 ### title
 
@@ -104,6 +104,8 @@ Drop contact rows you do not need. A long `npub` wraps; add `mono` on that value
 
 ### bullets
 
+A list of items uses this layout. Each item is one `<li>`. Do not stack the items as lines in a paragraph.
+
 ```html
 <section class="slide bullets light">
   <header class="bar">
@@ -112,6 +114,7 @@ Drop contact rows you do not need. A long `npub` wraps; add `mono` on that value
   <div class="body">
     <ul>
       <li>Una idea.</li>
+      <li>Otra idea.</li>
     </ul>
   </div>
 </section>
