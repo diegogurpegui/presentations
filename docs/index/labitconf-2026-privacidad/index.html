@@ -1122,6 +1122,13 @@
         return el.classList && el.classList.contains("slide");
       });
       var index = 0;
+      var theme = new URLSearchParams(location.search).get("theme");
+      if (theme === "dark" || theme === "light") {
+        slides.forEach(function (el) {
+          el.classList.remove("dark", "light");
+          el.classList.add(theme);
+        });
+      }
 
       function fit() {
         if (window.matchMedia("print").matches) return;
