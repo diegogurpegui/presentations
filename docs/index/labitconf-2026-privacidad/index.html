@@ -833,7 +833,7 @@
 
     <section class="slide bullets light">
       <header class="bar"><h2>Información ¿pública?</h2></header>
-      <div class="body">
+      <div class="body" style="position:relative;">
         <ul>
           <li>Quién sos y quién es tu familia</li>
           <li>Qué cosas tenés</li>
@@ -842,6 +842,12 @@
           <li>Qué te gusta, y qué no</li>
           <li>Qué te interesa, y qué no</li>
         </ul>
+        <div style="position:absolute; z-index:1; left:1540px; top:8px; width:328px; padding:12px; background:#fff; box-shadow:0 14px 22px rgba(0,0,0,.22); transform:rotate(-7deg);">
+          <img alt="Selfie de una pareja al atardecer, con un pueblo costero de fondo." src="assets/info_public_trip-story.png" style="display:block; width:100%; height:auto; max-width:none; max-height:none;">
+        </div>
+        <div style="position:absolute; z-index:2; left:1012px; top:440px; width:648px; padding:12px; background:#fff; box-shadow:0 14px 22px rgba(0,0,0,.22); transform:rotate(4.5deg);">
+          <img alt="Familia dibujada en el vidrio trasero de un auto: dos adultos, dos chicos y un perro." src="assets/info_public_car-bumper.png" style="display:block; width:100%; height:auto; max-width:none; max-height:none;">
+        </div>
       </div>
     </section>
 
@@ -865,28 +871,21 @@
     </section>
 
     <section class="slide columns light">
-      <header class="bar"><h2>Riesgos - Statista</h2></header>
-      <div class="body cols-2">
-        <div>
-          <img alt="Países con más datos filtrados en brechas, de 2004 a 2024. Fuente: Surfshark, Statista 2025." src="assets/statista-paises.png">
-        </div>
-        <div>
-          <img alt="Datos comprometidos en el mundo en 2023 y 2024, por sector y tipo de dato." src="assets/verizon-datos.png">
-          <p>Source: Verizon</p>
-        </div>
-      </div>
-    </section>
-
-    <section class="slide columns light">
       <header class="bar"><h2>Riesgos - Privacy Rights Clearinghouse (USA)</h2></header>
       <div class="body cols-2">
-        <div>
-          <h3>75.365</h3>
-          <p>Notificaciones de filtración de datos</p>
-          <h3>36.594</h3>
-          <p>Eventos únicos de filtración</p>
-          <h3>9.380.000.000</h3>
-          <p>Individuos impactados</p>
+        <div style="display:flex; flex-direction:column; gap:48px;">
+          <div>
+            <h3 style="margin:0; line-height:1;">75.365</h3>
+            <p style="margin:6px 0 0; line-height:1.25;">Notificaciones de filtración de datos</p>
+          </div>
+          <div>
+            <h3 style="margin:0; line-height:1;">36.594</h3>
+            <p style="margin:6px 0 0; line-height:1.25;">Eventos únicos de filtración</p>
+          </div>
+          <div>
+            <h3 style="margin:0; line-height:1;">9.380.000.000</h3>
+            <p style="margin:6px 0 0; line-height:1.25;">Individuos impactados</p>
+          </div>
         </div>
         <div>
           <img alt="Filtraciones según el tipo de organización. Fuente: Privacy Rights Clearinghouse." src="assets/prc-organizaciones.png">
