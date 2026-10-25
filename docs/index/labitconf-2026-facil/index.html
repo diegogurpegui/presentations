@@ -940,8 +940,8 @@
         var head = null;
         var trail = [];
         var raf = 0;
-        var life = 144;
-        var reach = 115.2;
+        var life = 288;
+        var reach = 230.4;
         var root = document.documentElement;
 
         function resize() {
@@ -994,11 +994,12 @@
           var dist = Math.sqrt(mx * mx + my * my);
           if (dist >= reach) return;
           var age = 1 - (now - a.t) / life;
-          var amount = Math.min(age, 1 - dist / reach) * 0.3;
+          var fade = Math.min(age, 1 - dist / reach);
+          var amount = fade * 0.42;
           if (amount <= 0) return;
           ctx.beginPath();
           ctx.strokeStyle = "rgba(255, 32, 32, " + amount.toFixed(3) + ")";
-          ctx.lineWidth = 3;
+          ctx.lineWidth = 10.24 * fade;
           ctx.moveTo(a.x, a.y);
           ctx.lineTo(b.x, b.y);
           ctx.stroke();
@@ -1032,7 +1033,7 @@
             var dy = e.clientY - head.y;
             if (dx * dx + dy * dy > 1) trail.push({ x: head.x, y: head.y, t: now });
           }
-          if (trail.length > 140) trail.shift();
+          if (trail.length > 280) trail.shift();
           head = { x: e.clientX, y: e.clientY };
           root.classList.add("has-laser");
           kick();
