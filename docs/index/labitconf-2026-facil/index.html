@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bitcoin nunca va a ser fácil</title>
+  <style>
+    /* System UI stack on purpose: no linked or embedded font files.
+       CSS and JavaScript stay in this file. Images live in assets/ beside it. */
+
+    :root {
+      --btc: #ff1c1c;
+      --btc-deep: #9a1515;
+      --night: #0a0a0a;
+      --paper: #ffffff;
+      --slide-w: 1920px;
+      --slide-h: 1080px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      height: 100%;
+      background: #000;
+      overflow: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .sprite {
+      position: absolute;
+      width: 0;
+      height: 0;
+      overflow: hidden;
+    }
+
+    .deck {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: var(--slide-w);
+      height: var(--slide-h);
+      transform-origin: center center;
+      background: var(--night);
+    }
+
+    .slide {
+      display: none;
+      position: absolute;
+      inset: 0;
+      width: var(--slide-w);
+      height: var(--slide-h);
+      overflow: hidden;
+      background: var(--paper);
+      color: #121212;
+      font-family: "Segoe UI", Ubuntu, Cantarell, system-ui, sans-serif;
+      font-size: 64px;
+      font-weight: 400;
+      line-height: 1.35;
+      --fg: #121212;
+      --muted: #5c5c5c;
+      --line: #e6e6e6;
+      --surface: #fafafa;
+      --link: var(--btc-deep);
+    }
+
+    .slide.dark {
+      background: var(--night);
+      color: #f4f4f4;
+      --fg: #f4f4f4;
+      --muted: #8e8e8e;
+      --line: #2a2a2a;
+      --surface: #141414;
+      --link: var(--btc);
+    }
+
+    .slide.light {
+      background: var(--paper);
+      color: #121212;
+      --fg: #121212;
+      --muted: #5c5c5c;
+      --line: #e6e6e6;
+      --surface: #fafafa;
+      --link: var(--btc-deep);
+    }
+
+    .slide.is-active { display: block; }
+
+    .slide.bullets.is-active,
+    .slide.columns.is-active,
+    .slide.table.is-active,
+    .slide.links.is-active,
+    .slide.canvas.is-active {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .slide.section.is-active,
+    .slide.quote.is-active {
+      display: flex;
+    }
+
+    .slide.end.is-active {
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      align-items: center;
+    }
+
+    .slide.title.contacts.is-active {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+      align-items: stretch;
+      column-gap: 64px;
+    }
+
+    .icon {
+      width: 1.1em;
+      height: 1.1em;
+      display: inline-block;
+      vertical-align: -0.15em;
+      flex: 0 0 auto;
+    }
+
+    a:focus-visible {
+      outline: 2px solid var(--btc);
+      outline-offset: 4px;
+    }
+
+    /* Inner slides: slim title, the rest is content */
+    .bar {
+      position: relative;
+      flex: 0 0 auto;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 32px;
+      padding: 72px 88px 32px;
+    }
+
+    .bar h2 {
+      margin: 0;
+      flex: 1;
+      color: var(--fg);
+      font-size: 84px;
+      font-weight: 600;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      text-wrap: balance;
+    }
+
+    .bar h2::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 50%;
+      height: 4px;
+      background: var(--btc);
+    }
+
+    .body {
+      flex: 1;
+      min-height: 0;
+      padding: 48px 88px 64px;
+    }
+
+    /* title */
+    .slide.title .kicker,
+    .slide.title h1,
+    .slide.title .lede {
+      position: relative;
+      z-index: 1;
+    }
+
+    .kicker {
+      margin: 0;
+      color: var(--btc);
+      font-size: 40px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    .slide.title {
+      padding: 92px 96px 80px;
+    }
+
+    .slide.title h1 {
+      margin: 28px 0 0;
+      max-width: 1100px;
+      font-size: 184px;
+      font-weight: 600;
+      letter-spacing: -0.045em;
+      line-height: 0.98;
+      text-wrap: balance;
+    }
+
+    .lede {
+      margin: 28px 0 0;
+      max-width: 760px;
+      color: var(--muted);
+      font-size: 60px;
+      line-height: 1.35;
+    }
+
+    .watermark {
+      position: absolute;
+      z-index: 0;
+      display: grid;
+      place-items: center;
+      pointer-events: none;
+      color: var(--btc);
+    }
+
+    .slide.title .watermark {
+      width: 920px;
+      right: -180px;
+      bottom: -150px;
+      opacity: 0.2;
+      z-index: 0;
+    }
+
+    .slide.title .mark { width: 920px; }
+
+    .mark {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .foot {
+      position: absolute;
+      z-index: 1;
+      left: 96px;
+      right: 96px;
+      bottom: 64px;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 32px;
+      border-top: 1px solid var(--line);
+      padding-top: 24px;
+    }
+
+    .who,
+    .meta {
+      margin: 0;
+      font-size: 52px;
+    }
+
+    .meta { color: var(--muted); }
+
+    /* title + contacts: alternate intro. Smaller than .end */
+    .slide.title.contacts .intro {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      min-height: 0;
+    }
+
+    .slide.title.contacts .kicker { font-size: 32px; }
+
+    .slide.title.contacts h1 {
+      max-width: none;
+      font-size: 132px;
+    }
+
+    .slide.title.contacts .lede {
+      max-width: none;
+      font-size: 40px;
+    }
+
+    .slide.title.contacts .foot {
+      position: static;
+      left: auto;
+      right: auto;
+      bottom: auto;
+      margin-top: auto;
+      padding-top: 20px;
+    }
+
+    .slide.title.contacts .who,
+    .slide.title.contacts .meta { font-size: 36px; }
+
+    .slide.title.contacts .watermark {
+      width: 640px;
+      right: -220px;
+      left: auto;
+      bottom: -380px;
+      opacity: 0.16;
+    }
+
+    .slide.title.contacts .mark { width: 640px; }
+
+    .slide.title.contacts .contacts {
+      position: relative;
+      z-index: 1;
+      align-self: center;
+    }
+
+    .slide.title.contacts .contacts a {
+      grid-template-columns: 40px 168px minmax(0, 1fr);
+      gap: 12px;
+      padding: 12px 0;
+    }
+
+    .slide.title.contacts .contacts .icon {
+      width: 40px;
+      height: 40px;
+    }
+
+    .slide.title.contacts .contacts .label {
+      font-size: 18px;
+      letter-spacing: 0.12em;
+    }
+
+    .slide.title.contacts .contacts .value { font-size: 32px; }
+
+    .slide.title.contacts .contacts .value.mono {
+      font-size: 22px;
+    }
+
+    /* section */
+    .slide.section {
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 96px;
+    }
+
+    .slide.section .kicker { margin: 0 0 22px; }
+
+    .slide.section h2 {
+      margin: 0;
+      max-width: 1600px;
+      font-size: 168px;
+      font-weight: 600;
+      letter-spacing: -0.04em;
+      line-height: 1.02;
+      text-wrap: balance;
+    }
+
+    /* quote */
+    .slide.quote {
+      align-items: center;
+      padding: 96px 120px;
+    }
+
+    .slide.quote blockquote {
+      margin: 0;
+      max-width: 1500px;
+      padding-left: 36px;
+      border-left: 4px solid var(--btc);
+    }
+
+    .slide.quote p {
+      margin: 0;
+      font-size: 120px;
+      font-weight: 600;
+      letter-spacing: -0.035em;
+      line-height: 1.12;
+      text-wrap: balance;
+    }
+
+    .slide.quote footer {
+      margin-top: 28px;
+      color: var(--muted);
+      font-size: 48px;
+    }
+
+    /* bullets */
+    .slide.bullets ul {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      font-size: 60px;
+      line-height: 1.25;
+    }
+
+    .slide.bullets li {
+      position: relative;
+      padding-left: 52px;
+    }
+
+    .slide.bullets li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0.42em;
+      width: 16px;
+      height: 16px;
+      background: var(--btc);
+    }
+
+    /* links */
+    .slide.links .link + .link {
+      margin-top: 28px;
+      padding-top: 28px;
+      border-top: 1px solid var(--line);
+    }
+
+    .slide.links a {
+      color: var(--link);
+      font-size: 68px;
+      text-decoration: none;
+    }
+
+    .slide.links a:hover { text-decoration: underline; }
+
+    .slide.links .link p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 52px;
+    }
+
+    /* columns */
+    .cols-2,
+    .cols-3 {
+      display: grid;
+      align-content: start;
+      height: 100%;
+    }
+
+    .cols-2 { grid-template-columns: 1fr 1fr; }
+    .cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+
+    .cols-2 > *,
+    .cols-3 > * { padding-right: 48px; }
+
+    .cols-2 > * + *,
+    .cols-3 > * + * {
+      padding-left: 48px;
+      border-left: 1px solid var(--line);
+    }
+
+    .cols-2 > :last-child,
+    .cols-3 > :last-child { padding-right: 0; }
+
+    .slide.columns h3 {
+      margin: 0 0 14px;
+      color: var(--fg);
+      font-size: 60px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+
+    .slide.columns p {
+      margin: 0;
+      font-size: 56px;
+      line-height: 1.4;
+    }
+
+    /* table */
+    .slide.table table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 60px;
+    }
+
+    .slide.table th,
+    .slide.table td {
+      padding: 18px 16px;
+      text-align: left;
+      font-weight: 400;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .slide.table th {
+      padding-top: 0;
+      color: var(--muted);
+      font-size: 32px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .slide.table td:last-child,
+    .slide.table th:last-child { text-align: right; }
+
+    /* canvas */
+    .slide.canvas .body {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 28px;
+    }
+
+    .row, .cols {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .stack {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 16px;
+    }
+
+    .box {
+      background: var(--surface);
+      color: var(--fg);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 16px 26px;
+      font-size: 56px;
+      line-height: 1.3;
+    }
+
+    .box.solid {
+      background: var(--btc);
+      border-color: var(--btc);
+      color: #111;
+    }
+
+    .arrow {
+      position: relative;
+      flex: 0 0 72px;
+      width: 72px;
+      height: 0;
+      border-top: 2px solid var(--btc);
+    }
+
+    .arrow::after {
+      content: "";
+      position: absolute;
+      right: -1px;
+      top: -6px;
+      border-width: 5px 0 5px 9px;
+      border-style: solid;
+      border-color: transparent transparent transparent var(--btc);
+    }
+
+    .arrow.down { transform: rotate(90deg); }
+    .arrow.left { transform: rotate(180deg); }
+    .arrow.up { transform: rotate(-90deg); }
+
+    .slide.canvas .icon {
+      width: 40px;
+      height: 40px;
+      color: var(--btc);
+    }
+
+    .mono {
+      font-family: ui-monospace, "Cascadia Mono", "Segoe UI Mono", monospace;
+      font-size: 0.92em;
+    }
+
+    /* image */
+    .slide.image .bg,
+    .slide.image > img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .slide.image > img.contain { object-fit: contain; }
+
+    .body img {
+      display: block;
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+
+    .shade {
+      background:
+        radial-gradient(circle at 78% 70%, rgba(255, 28, 28, 0.28), transparent 42%),
+        var(--night);
+    }
+
+    .slide.light .shade {
+      background:
+        radial-gradient(circle at 78% 70%, rgba(255, 28, 28, 0.22), transparent 46%),
+        var(--paper);
+    }
+
+    .slide.image .mark {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 280px;
+      transform: translate(-50%, -50%);
+      color: var(--btc);
+    }
+
+    /* end */
+    .slide.end { padding: 88px 96px 80px; column-gap: 72px; }
+
+    .end-copy .mark {
+      width: 128px;
+      color: var(--btc);
+      margin-bottom: 28px;
+    }
+
+    .end-copy h2 {
+      margin: 0;
+      font-size: 176px;
+      font-weight: 600;
+      letter-spacing: -0.045em;
+      line-height: 0.95;
+    }
+
+    .end-copy p {
+      margin: 24px 0 0;
+      max-width: 760px;
+      color: var(--muted);
+      font-size: 56px;
+    }
+
+    .contacts {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .contacts a {
+      display: grid;
+      grid-template-columns: 52px 280px 1fr;
+      align-items: center;
+      gap: 16px;
+      padding: 18px 0;
+      border-top: 1px solid var(--line);
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .contacts li:last-child a { border-bottom: 1px solid var(--line); }
+
+    .contacts .icon {
+      width: 52px;
+      height: 52px;
+      color: var(--btc);
+    }
+
+    .contacts .label {
+      color: var(--muted);
+      font-size: 28px;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .contacts .value {
+      font-size: 56px;
+      letter-spacing: -0.02em;
+      line-height: 1.25;
+    }
+
+    .contacts .value.mono {
+      font-size: 40px;
+      word-break: break-all;
+    }
+
+    .contacts a:hover .value { color: var(--link); }
+
+    html.has-laser,
+    html.has-laser * { cursor: none !important; }
+
+    .laser {
+      position: fixed;
+      inset: 0;
+      z-index: 30;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    @page {
+      size: 20in 11.25in;
+      margin: 0;
+    }
+
+    @media print {
+      html, body {
+        height: auto;
+        overflow: visible;
+        background: #fff;
+      }
+
+      .deck {
+        position: static !important;
+        transform: none !important;
+        width: var(--slide-w);
+        height: auto;
+      }
+
+      .sprite,
+      .laser { display: none !important; }
+
+      .slide {
+        display: block !important;
+        position: relative !important;
+        break-after: page;
+        page-break-after: always;
+        break-inside: avoid;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      .slide.section,
+      .slide.quote { display: flex !important; }
+
+      .slide.end,
+      .slide.title.contacts { display: grid !important; }
+
+      .slide.bullets,
+      .slide.columns,
+      .slide.table,
+      .slide.links,
+      .slide.canvas {
+        display: flex !important;
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!--
+    Plantilla bitcoin-modern.
+    Copiar este archivo a docs/index/<nombre>/index.html.
+    Las imágenes van en docs/index/<nombre>/assets/ y se referencian como assets/<archivo>.
+    Conservar <style>, <script> y este sprite.
+    Reemplazar las <section class="slide">.
+    Contrato: templates/bitcoin-modern/TEMPLATE.md
+  -->
+  <svg class="sprite" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <symbol id="i-arrow" viewBox="0 0 24 24">
+      <path d="M4 12h14M14 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="i-key" viewBox="0 0 24 24">
+      <circle cx="8" cy="15" r="3.2" fill="none" stroke="currentColor" stroke-width="1.75"/>
+      <path d="M10.7 13.5 20 5.2M20 5.2v4.2M20 5.2h-4.2" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="i-globe" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="1.75"/>
+      <path d="M4 12h16M12 4c2.2 2.4 3.2 5 3.2 8s-1 5.6-3.2 8c-2.2-2.4-3.2-5-3.2-8s1-5.6 3.2-8z" fill="none" stroke="currentColor" stroke-width="1.75"/>
+    </symbol>
+    <symbol id="i-x" viewBox="0 0 512 512">
+      <path fill="currentColor" d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 92h-42L364.4 421.8z"/>
+    </symbol>
+    <symbol id="i-instagram" viewBox="0 0 24 24">
+      <rect x="4" y="4" width="16" height="16" rx="4.5" fill="none" stroke="currentColor" stroke-width="1.75"/>
+      <circle cx="12" cy="12" r="3.3" fill="none" stroke="currentColor" stroke-width="1.75"/>
+      <circle cx="16.7" cy="7.3" r="0.9" fill="currentColor"/>
+    </symbol>
+    <symbol id="i-nostr" viewBox="0 0 306.66666 350.66666">
+      <path fill="currentColor" d="m 21.822432,348.83878 c -1.792391,-1.98057 -2.622963,-7.14585 -1.835441,-11.4145 0.714963,-3.87536 4.255231,-12.01947 6.744644,-15.51553 1.680987,-2.36073 1.421027,-2.85393 -1.01591,-1.92741 -2.581452,0.98146 -3.578424,0.85421 -4.33147,-0.55287 -0.944671,-1.76513 0.276886,-5.66281 2.606211,-8.31577 2.483661,-2.82873 7.527943,-5.54977 12.071378,-6.51167 1.982652,-0.41976 4.402066,-1.17006 5.376476,-1.66734 1.656251,-0.84525 7.242901,-8.42353 26.244341,-35.60036 3.97366,-5.68334 8.55228,-12.22041 10.174711,-14.52682 1.705163,-2.42403 3.366134,-5.78752 3.936378,-7.97122 2.054702,-7.86831 5.38522,-11.72049 12.331094,-14.26252 6.506866,-2.38136 24.279846,-17.77075 31.005586,-26.84734 1.60624,-2.16767 2.684,-4.14913 2.395,-4.40324 -0.28899,-0.25411 -3.97543,-1.29106 -8.1921,-2.30432 -17.08627,-4.10583 -31.647931,-9.75449 -40.462262,-15.69585 -3.850758,-2.59563 -4.367271,-2.7607 -7.666666,-2.4501 -10.142865,0.95484 -20.904357,3.99407 -27.537737,7.77714 -9.303863,5.30608 -10.155549,5.66174 -11.294409,4.71657 -1.905158,-1.58114 -1.224429,-10.15854 1.2856,-16.19897 0.38547,-0.92764 0.146378,-1.16667 -1.16698,-1.16667 -1.15624,0 -3.457686,1.70001 -7.671448,5.66667 -6.500687,6.11948 -8.525318,6.93043 -10.448292,4.185 -1.493986,-2.13297 -1.280537,-6.37415 0.620353,-12.32627 2.79883,-8.76377 2.474678,-9.00404 -6.435139,-4.76988 -3.5211807,1.67335 -6.2450587,2.5841 -6.935808,2.31903 -3.0226716,-1.1599 1.5512118,-14.05678 7.9212081,-22.33524 7.7031039,-10.01098 21.1213459,-16.69281 33.5921009,-16.72773 4.591274,-0.0129 10.866147,1.13111 10.866147,1.981 0,0.5422 6.036921,2.85939 6.42873,2.46759 0.111441,-0.11145 -0.539434,-1.29465 -1.446388,-2.62936 -1.879329,-2.76568 -2.145875,-5.49749 -0.594484,-6.09281 0.579989,-0.22256 5.754989,-0.40643 11.5,-0.40859 11.34987,-0.004 20.472298,-1.10947 27.778807,-3.36547 2.566667,-0.7925 13.216667,-5.57863 23.666667,-10.63584 19.99199,-9.67502 29.92436,-13.540346 41.38717,-16.10644 6.07065,-1.358993 8.71075,-1.554986 20.94616,-1.554986 20.32512,0 28.54719,2.077142 42.81739,10.816956 14.85851,9.10013 14.27853,8.90337 20.85502,7.07494 3.508,-0.97531 4.65083,-1.00461 9.53681,-0.24454 7.97854,1.24116 12.71332,0.73278 18.1633,-1.95024 10.32538,-5.08317 14.88831,-13.392661 14.1698,-25.80445 -0.54457,-9.407138 -3.94396,-14.4692 -15.77159,-23.485661 -11.19428,-8.533633 -17.29383,-15.492579 -20.51636,-23.407003 -2.15716,-5.297915 -2.90667,-15.132415 -1.58177,-20.754745 1.84299,-7.820875 6.02977,-13.1520857 11.48169,-14.6201337 4.47594,-1.20524616 8.78643,0.1056462 16.01215,4.8695677 5.11557,3.3727 7.92849,4.643141 16.50022,7.452239 11.94495,3.914559 13.34483,5.254484 5.83334,5.583532 -2.475,0.10842 -4.5,0.42437 -4.5,0.702111 0,0.277742 2.11737,1.186929 4.70526,2.020416 7.41384,2.387788 5.93365,3.023849 -8.09254,3.4775 -9.88117,0.319588 -13.10076,0.668012 -16.48497,1.784001 -5.35152,1.764735 -6.12775,2.444299 -6.12775,5.364641 0,3.658021 2.77658,6.960002 11.34181,13.48799 13.31664,10.149258 18.21717,15.998483 21.84711,26.076477 1.56816,4.353765 1.76394,5.876239 1.78614,13.889736 0.0275,9.943957 -1.08894,14.951442 -5.12292,22.976502 -7.25375,14.43034 -15.84135,23.07595 -33.78284,34.01106 -4.98953,3.04106 -7.51603,4.98598 -7.70924,5.93465 -0.15806,0.77611 -0.4281,5.61112 -0.60008,10.74445 -0.45898,13.69947 -3.14113,20.92292 -10.4736,28.20703 -11.0777,11.00463 -30.0477,16.79013 -55.06045,16.79241 -5.96485,5.5e-4 -6.14662,0.0472 -7.78727,1.99696 -0.92392,1.09803 -1.87864,2.62269 -2.12158,3.38816 -0.39595,1.24752 -4.78997,4.43861 -10.10532,7.33884 -1.81721,0.99153 -8.72397,10.98661 -8.05452,11.65606 0.31697,0.31697 1.14498,0.0667 32.84276,-9.92572 27.33305,-8.6165 27.47548,-8.65267 32.86947,-8.34789 3.71263,0.20979 5.06144,0.60412 6.92295,2.02396 2.08968,1.59388 15.81887,22.03386 17.90775,26.66101 1.75723,3.89252 -1.14642,5.03347 -6.22673,2.44671 -1.54373,-0.78602 -5.03012,-3.6505 -7.74755,-6.3655 -5.4625,-5.45763 -6.38599,-5.47845 -5.74138,-0.1294 0.48663,4.03808 -0.63417,5.15086 -3.62844,3.60246 -2.32704,-1.20336 -3.6431,-3.76113 -4.46535,-8.67842 l -0.55739,-3.33334 -4,0.0236 c -3.21568,0.019 -9.16343,1.64327 -30.33333,8.28383 -15.05345,4.72195 -27.19003,8.89024 -28.33333,9.73102 -5.28968,3.89004 -9.56785,4.62207 -13.35034,2.28437 -5.40009,-3.33744 -5.57864,-9.70939 -0.62551,-22.32283 1.72782,-4.4 3.5232,-8.31038 3.98973,-8.68975 1.26287,-1.02691 3.06492,-5.64358 2.2029,-5.64358 -0.39336,0 -4.42587,1.34516 -8.96114,2.98924 -8.14158,2.9514 -8.43797,3.13336 -23.41746,14.37663 -14.97652,11.24105 -15.18334,11.42975 -16.09151,14.68203 -1.19959,4.2959 -4.97001,8.52557 -9.636931,10.81074 -2.03086,0.99441 -3.939194,1.80803 -4.240741,1.80803 -0.301548,0 -0.882186,0.53468 -1.290307,1.18819 -0.40812,0.6535 -3.354584,4.46001 -6.547697,8.45891 -13.895451,17.40197 -29.925504,39.30521 -36.363246,49.68623 -1.932787,3.11666 -6.102373,8.36666 -9.265746,11.66666 -8.118657,8.46931 -10.323687,11.34576 -13.558258,17.68668 -1.564058,3.06611 -3.165639,5.67323 -3.55907,5.79359 -0.393431,0.12036 -1.201438,-0.3183 -1.795572,-0.97481 z"/>
+    </symbol>
+    <symbol id="i-linkedin" viewBox="0 0 24 24">
+      <rect x="3.5" y="3.5" width="17" height="17" rx="2" fill="none" stroke="currentColor" stroke-width="1.75"/>
+      <path d="M8 10.5V16.5M8 7.7v.2M11.8 16.5v-3.4c0-1.2.7-2 1.8-2s1.8.8 1.8 2v3.4" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="i-btc" viewBox="0 0 64 64">
+      <path fill="#ff1c1c" d="M63.033 39.744c-4.274 17.143-21.637 27.576-38.782 23.301-17.138-4.274-27.571-21.638-23.295-38.78 4.272-17.145 21.635-27.579 38.775-23.305 17.144 4.274 27.576 21.64 23.302 38.784z"/>
+      <path fill="#fff" d="M46.103 27.444c.637-4.258-2.605-6.547-7.038-8.074l1.438-5.768-3.511-.875-1.4 5.616c-.923-.23-1.871-.447-2.813-.662l1.41-5.653-3.509-.875-1.439 5.766c-.764-.174-1.514-.346-2.242-.527l.004-.018-4.842-1.209-.934 3.75s2.605.597 2.55.634c1.422.355 1.679 1.296 1.636 2.042l-1.638 6.571c.098.025.225.061.365.117-.117-.029-.242-.061-.371-.092l-2.296 9.205c-.174.432-.615 1.08-1.609.834.035.051-2.552-.637-2.552-.637l-1.743 4.019 4.569 1.139c.85.213 1.683.436 2.503.646l-1.453 5.834 3.507.875 1.439-5.772c.958.26 1.888.5 2.798.726l-1.434 5.745 3.511.875 1.453-5.823c5.987 1.133 10.489.676 12.384-4.739 1.527-4.36-.076-6.875-3.226-8.515 2.294-.529 4.022-2.038 4.483-5.155zm-8.022 11.249c-1.085 4.36-8.426 2.003-10.806 1.412l1.928-7.729c2.38.594 10.012 1.77 8.878 6.317zm1.086-11.312c-.99 3.966-7.1 1.951-9.082 1.457l1.748-7.01c1.982.494 8.365 1.416 7.334 5.553z"/>
+    </symbol>
+  </svg>
+
+  <main class="deck">
+    <section class="slide title contacts dark">
+      <div class="intro">
+        <p class="kicker">LABITCONF · 2026</p>
+        <h1>Bitcoin nunca<br>va a ser fácil</h1>
+        <footer class="foot">
+          <p class="who">Diego H. Gurpegui</p>
+        </footer>
+      </div>
+      <ul class="contacts">
+        <li>
+          <a href="https://diegogurpegui.com">
+            <svg class="icon" aria-hidden="true"><use href="#i-globe"/></svg>
+            <span class="label">Web</span>
+            <span class="value">diegogurpegui.com</span>
+          </a>
+        </li>
+        <li>
+          <a href="https://twitter.com/diegogurpegui">
+            <svg class="icon" aria-hidden="true"><use href="#i-x"/></svg>
+            <span class="label">X</span>
+            <span class="value">@diegogurpegui</span>
+          </a>
+        </li>
+        <li>
+          <a href="https://instagram.com/diego.gurpegui">
+            <svg class="icon" aria-hidden="true"><use href="#i-instagram"/></svg>
+            <span class="label">Instagram</span>
+            <span class="value">@diego.gurpegui</span>
+          </a>
+        </li>
+        <li>
+          <a href="nostr:npub168nqgewzkamnyh53x0epqrftkv2pdh9gzr6558v4vetzr3w7uxfs63926e">
+            <svg class="icon" aria-hidden="true"><use href="#i-nostr"/></svg>
+            <span class="label">Nostr</span>
+            <span class="value">@diegogurpegui.com</span>
+          </a>
+        </li>
+        <li>
+          <a href="https://www.linkedin.com/in/diegogurpegui">
+            <svg class="icon" aria-hidden="true"><use href="#i-linkedin"/></svg>
+            <span class="label">LinkedIn</span>
+            <span class="value">/in/diegogurpegui</span>
+          </a>
+        </li>
+      </ul>
+      <div class="watermark" aria-hidden="true">
+        <svg class="mark" viewBox="0 0 64 64"><use href="#i-btc"/></svg>
+      </div>
+    </section>
+
+    <section class="slide image dark">
+      <img alt="Dos siluetas enfrentadas: una negra que alcanza hacia arriba sobre fondo blanco, y una blanca que sostiene una esfera sobre fondo negro." src="assets/dual-background.jpg">
+    </section>
+
+    <section class="slide end dark">
+      <div class="end-copy">
+        <svg class="mark" viewBox="0 0 64 64" aria-hidden="true"><use href="#i-btc"/></svg>
+        <h2>Gracias</h2>
+        <p>Bitcoin nunca va a ser fácil</p>
+      </div>
+      <ul class="contacts">
+        <li>
+          <a href="https://diegogurpegui.com">
+            <svg class="icon" aria-hidden="true"><use href="#i-globe"/></svg>
+            <span class="label">Web</span>
+            <span class="value">diegogurpegui.com</span>
+          </a>
+        </li>
+        <li>
+          <a href="https://twitter.com/diegogurpegui">
+            <svg class="icon" aria-hidden="true"><use href="#i-x"/></svg>
+            <span class="label">X</span>
+            <span class="value">@diegogurpegui</span>
+          </a>
+        </li>
+        <li>
+          <a href="https://instagram.com/diego.gurpegui">
+            <svg class="icon" aria-hidden="true"><use href="#i-instagram"/></svg>
+            <span class="label">Instagram</span>
+            <span class="value">@diego.gurpegui</span>
+          </a>
+        </li>
+        <li>
+          <a href="nostr:npub168nqgewzkamnyh53x0epqrftkv2pdh9gzr6558v4vetzr3w7uxfs63926e">
+            <svg class="icon" aria-hidden="true"><use href="#i-nostr"/></svg>
+            <span class="label">Nostr</span>
+            <span class="value">@diegogurpegui.com</span>
+          </a>
+        </li>
+        <li>
+          <a href="https://www.linkedin.com/in/diegogurpegui">
+            <svg class="icon" aria-hidden="true"><use href="#i-linkedin"/></svg>
+            <span class="label">LinkedIn</span>
+            <span class="value">/in/diegogurpegui</span>
+          </a>
+        </li>
+      </ul>
+    </section>
+  </main>
+
+  <script>
+    (function () {
+      var deck = document.querySelector(".deck");
+      if (!deck) return;
+      var slides = Array.prototype.filter.call(deck.children, function (el) {
+        return el.classList && el.classList.contains("slide");
+      });
+      var index = 0;
+      var theme = new URLSearchParams(location.search).get("theme");
+      if (theme === "dark" || theme === "light") {
+        slides.forEach(function (el) {
+          el.classList.remove("dark", "light");
+          el.classList.add(theme);
+        });
+      }
+
+      function fit() {
+        if (window.matchMedia("print").matches) return;
+        var scale = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+        deck.style.transform = "translate(-50%, -50%) scale(" + scale + ")";
+      }
+
+      function show(n) {
+        if (!slides.length) return;
+        index = Math.max(0, Math.min(slides.length - 1, n));
+        slides.forEach(function (el, i) {
+          var on = i === index;
+          el.classList.toggle("is-active", on);
+          el.setAttribute("aria-hidden", on ? "false" : "true");
+        });
+        var hash = "#" + (index + 1);
+        if (location.hash !== hash) history.replaceState(null, "", hash);
+      }
+
+      function fromHash() {
+        var n = parseInt(String(location.hash).slice(1), 10);
+        return n > 0 ? n - 1 : 0;
+      }
+
+      window.addEventListener("resize", fit);
+      window.addEventListener("hashchange", function () { show(fromHash()); });
+      window.addEventListener("beforeprint", function () { deck.style.transform = "none"; });
+      window.addEventListener("afterprint", fit);
+
+      window.addEventListener("keydown", function (e) {
+        if (e.altKey || e.metaKey || e.ctrlKey) return;
+        if (e.target.closest && e.target.closest("a, input, textarea, button")) return;
+        var next = { ArrowRight: 1, ArrowDown: 1, PageDown: 1, " ": 1 };
+        var prev = { ArrowLeft: 1, ArrowUp: 1, PageUp: 1, Backspace: 1 };
+        if (next[e.key]) { e.preventDefault(); show(index + 1); }
+        else if (prev[e.key]) { e.preventDefault(); show(index - 1); }
+        else if (e.key === "Home") { e.preventDefault(); show(0); }
+        else if (e.key === "End") { e.preventDefault(); show(slides.length - 1); }
+      });
+
+      window.addEventListener("click", function (e) {
+        if (e.target.closest && e.target.closest("a")) return;
+        var rect = deck.getBoundingClientRect();
+        if (e.clientX < rect.left || e.clientX > rect.right || e.clientY < rect.top || e.clientY > rect.bottom) return;
+        if (e.clientX - rect.left < rect.width * 0.22) show(index - 1);
+        else show(index + 1);
+      });
+
+      (function laser() {
+        var canvas = document.createElement("canvas");
+        canvas.className = "laser";
+        canvas.setAttribute("aria-hidden", "true");
+        canvas.style.pointerEvents = "none";
+        document.body.appendChild(canvas);
+        var ctx = canvas.getContext("2d");
+        var head = null;
+        var trail = [];
+        var raf = 0;
+        var life = 144;
+        var reach = 115.2;
+        var root = document.documentElement;
+
+        function resize() {
+          var dpr = Math.min(window.devicePixelRatio || 1, 2);
+          canvas.width = Math.round(window.innerWidth * dpr);
+          canvas.height = Math.round(window.innerHeight * dpr);
+          ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        }
+
+        function kick() {
+          if (!raf) raf = requestAnimationFrame(paint);
+        }
+
+        function paint() {
+          raf = 0;
+          var now = performance.now();
+          var kept = [];
+          var i;
+          ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+          for (i = 0; i < trail.length; i++) {
+            var q = trail[i];
+            if (now - q.t >= life) continue;
+            if (head) {
+              var qx = q.x - head.x;
+              var qy = q.y - head.y;
+              if (qx * qx + qy * qy > reach * reach) continue;
+            }
+            kept.push(q);
+          }
+          trail = kept;
+          ctx.lineCap = "round";
+          var prev = null;
+          for (i = 0; i < trail.length; i++) {
+            var p = trail[i];
+            if (prev) stroke(prev, p, now);
+            prev = p;
+          }
+          if (head && prev) stroke(prev, head, now);
+          if (head) dot(head.x, head.y);
+          if (head || trail.length) kick();
+        }
+
+        function stroke(a, b, now) {
+          if (!head) return;
+          var jx = b.x - a.x;
+          var jy = b.y - a.y;
+          if (jx * jx + jy * jy > 360000) return;
+          var mx = (a.x + b.x) / 2 - head.x;
+          var my = (a.y + b.y) / 2 - head.y;
+          var dist = Math.sqrt(mx * mx + my * my);
+          if (dist >= reach) return;
+          var age = 1 - (now - a.t) / life;
+          var amount = Math.min(age, 1 - dist / reach) * 0.3;
+          if (amount <= 0) return;
+          ctx.beginPath();
+          ctx.strokeStyle = "rgba(255, 32, 32, " + amount.toFixed(3) + ")";
+          ctx.lineWidth = 3;
+          ctx.moveTo(a.x, a.y);
+          ctx.lineTo(b.x, b.y);
+          ctx.stroke();
+        }
+
+        function dot(x, y) {
+          var glow = ctx.createRadialGradient(x, y, 0, x, y, 16);
+          glow.addColorStop(0, "rgba(255, 30, 30, 0.4)");
+          glow.addColorStop(1, "rgba(255, 0, 0, 0)");
+          ctx.fillStyle = glow;
+          ctx.beginPath();
+          ctx.arc(x, y, 16, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.fillStyle = "#ff1c1c";
+          ctx.beginPath();
+          ctx.arc(x, y, 6.4, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.fillStyle = "#ffc2c2";
+          ctx.beginPath();
+          ctx.arc(x, y, 2.08, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        resize();
+        window.addEventListener("resize", resize);
+        window.addEventListener("pointermove", function (e) {
+          if (e.pointerType && e.pointerType !== "mouse") return;
+          var now = performance.now();
+          if (head) {
+            var dx = e.clientX - head.x;
+            var dy = e.clientY - head.y;
+            if (dx * dx + dy * dy > 1) trail.push({ x: head.x, y: head.y, t: now });
+          }
+          if (trail.length > 140) trail.shift();
+          head = { x: e.clientX, y: e.clientY };
+          root.classList.add("has-laser");
+          kick();
+        });
+        root.addEventListener("pointerleave", function (e) {
+          if (e.pointerType && e.pointerType !== "mouse") return;
+          head = null;
+          trail = [];
+          root.classList.remove("has-laser");
+          kick();
+        });
+      })();
+
+      fit();
+      show(fromHash());
+    })();
+  </script>
+</body>
+</html>
