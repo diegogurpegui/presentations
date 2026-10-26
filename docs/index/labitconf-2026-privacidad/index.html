@@ -100,17 +100,9 @@
       display: flex;
     }
 
-    .slide.end.is-active {
-      display: grid;
-      grid-template-columns: 0.9fr 1.1fr;
-      align-items: center;
-    }
-
+    .slide.end.is-active,
     .slide.title.contacts.is-active {
       display: grid;
-      grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
-      align-items: stretch;
-      column-gap: 64px;
     }
 
     .icon {
@@ -250,7 +242,14 @@
 
     .meta { color: var(--muted); }
 
-    /* title + contacts: alternate intro. Smaller than .end */
+    /* title + contacts: alternate intro. Smaller than .end.
+       Column tracks live here, not on .is-active, so print keeps the two columns. */
+    .slide.title.contacts {
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+      align-items: stretch;
+      column-gap: 64px;
+    }
+
     .slide.title.contacts .intro {
       position: relative;
       z-index: 1;
@@ -593,8 +592,13 @@
       color: var(--btc);
     }
 
-    /* end */
-    .slide.end { padding: 88px 96px 80px; column-gap: 72px; }
+    /* end. Column tracks live here, not on .is-active, so print keeps the two columns. */
+    .slide.end {
+      padding: 88px 96px 80px;
+      column-gap: 72px;
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+      align-items: center;
+    }
 
     .end-copy .mark {
       width: 128px;
@@ -711,7 +715,11 @@
       .slide.quote { display: flex !important; }
 
       .slide.end,
-      .slide.title.contacts { display: grid !important; }
+      .slide.title.contacts {
+        display: grid !important;
+        height: var(--slide-h);
+        overflow: hidden;
+      }
 
       .slide.bullets,
       .slide.columns,

@@ -102,8 +102,6 @@
 
     .slide.end.is-active {
       display: grid;
-      grid-template-columns: 0.9fr 1.1fr;
-      align-items: center;
     }
 
     .icon {
@@ -514,8 +512,13 @@
       color: var(--btc);
     }
 
-    /* end */
-    .slide.end { padding: 88px 96px 80px; column-gap: 72px; }
+    /* end. Column tracks live here, not on .is-active, so print keeps the two columns. */
+    .slide.end {
+      padding: 88px 96px 80px;
+      column-gap: 72px;
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+      align-items: center;
+    }
 
     .end-copy .mark {
       width: 128px;
@@ -631,7 +634,11 @@
       .slide.section,
       .slide.quote { display: flex !important; }
 
-      .slide.end { display: grid !important; }
+      .slide.end {
+        display: grid !important;
+        height: var(--slide-h);
+        overflow: hidden;
+      }
 
       .slide.bullets,
       .slide.columns,
